@@ -1,2 +1,7 @@
+.idea
+
 api/node_modules
+api/.idea
+
 client/node_modules
+client/.idea
