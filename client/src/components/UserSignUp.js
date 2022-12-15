@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const UserSignUp = () => {
   const handleSignUpCancel = () => {};
@@ -26,7 +27,7 @@ const UserSignUp = () => {
         </button>
       </form>
       <p>
-        Already have a user account? Click here to <a href="sign-in.html">sign in</a>!
+        Already have a user account? Click here to <Link to="signin">sign in</Link>!
       </p>
     </div>
   );

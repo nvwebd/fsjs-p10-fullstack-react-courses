@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { client } from '../utils/apiClient';
+import { Link, useParams } from 'react-router-dom';
 
 const CourseDetail = () => {
   const [course, setCourse] = useState();
+  const params = useParams();
 
   useEffect(() => {
     if (!course) {
-      client('courses/1')
+      client(`courses/${params.id}`)
         .then((responseData) => {
           // TODO: split description?
           // TODO: split materialsNeeded?
@@ -24,15 +26,15 @@ const CourseDetail = () => {
     <>
       <div className="actions--bar">
         <div className="wrap">
-          <a className="button" href="update-course.html">
+          <Link className="button" to={`/courses/${params.id}/update`}>
             Update Course
-          </a>
-          <a className="button" href="/api/course/delete">
+          </Link>
+          <Link className="button" to="/course/delete">
             Delete Course
-          </a>
-          <a className="button button-secondary" href="index.html">
+          </Link>
+          <Link className="button button-secondary" to="/">
             Return to List
-          </a>
+          </Link>
         </div>
       </div>
 

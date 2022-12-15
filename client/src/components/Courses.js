@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { client } from '../utils/apiClient';
+import { Link } from 'react-router-dom';
 
 const Courses = () => {
   const [courses, setCourses] = useState([]);
@@ -20,17 +21,17 @@ const Courses = () => {
     <div className="wrap main--grid">
       {courses.map((course) => {
         return (
-          <a
+          <Link
             key={`course-${course.id}`}
             className="course--module course--link"
-            href={`/courses/${course.id}`}
+            to={`/courses/${course.id}`}
           >
             <h2 className="course--label">Course</h2>
             <h3 className="course--title">{course.title}</h3>
-          </a>
+          </Link>
         );
       })}
-      <a className="course--module course--add--module" href="/api/course/create">
+      <Link className="course--module course--add--module" to="/courses/create">
         <span className="course--add--title">
           <svg
             version="1.1"
@@ -44,7 +45,7 @@ const Courses = () => {
           </svg>
           New Course
         </span>
-      </a>
+      </Link>
     </div>
   );
 };

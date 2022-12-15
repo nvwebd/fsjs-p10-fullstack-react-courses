@@ -4,10 +4,12 @@ const UpdateCourse = () => {
   const handleUpdateCourseSubmit = () => {};
   const handleUpdateCourseCancel = () => {};
 
+  console.log('UPDATE COURSE: ');
+
   return (
     <div className="wrap">
       <h2>Update Course</h2>
-      <form>
+      <form onSubmit={handleUpdateCourseSubmit}>
         <div className="main--flex">
           <div>
             <label htmlFor="courseTitle">Course Title</label>
@@ -24,7 +26,7 @@ const UpdateCourse = () => {
               well and the experience gained in completing it goes a long way toward making the next
               project even better.&#13;&#13;Our pine bookcase, for example, features simple
               construction and it&apos;s designed to be built with basic woodworking tools. Yet, the
-              finished project is a worthy and useful addition to any room of the house. While it's
+              finished project is a worthy and useful addition to any room of the house. While its
               meant to rest on the floor, you can convert the bookcase to a wall-mounted storage
               unit by leaving off the baseboard. You can secure the cabinet to the wall by screwing
               through the cabinet cleats into the wall studs.&#13;&#13;We made the case out of

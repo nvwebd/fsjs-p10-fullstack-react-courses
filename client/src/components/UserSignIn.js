@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const UserSignIn = () => {
   const handleCancel = (event) => {
@@ -30,7 +31,7 @@ const UserSignIn = () => {
         </button>
       </form>
       <p>
-        Don&apos;t have a user account? Click here to <a href="sign-up.html">sign up</a>!
+        Don&apos;t have a user account? Click here to <Link to="signup">sign up</Link>!
       </p>
     </div>
   );
