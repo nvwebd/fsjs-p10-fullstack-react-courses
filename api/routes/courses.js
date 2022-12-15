@@ -16,10 +16,13 @@ router.get(
         {
           model: User,
           as: 'user',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'password']
+          }
         },
       ],
     });
-
+    
     res.status(200).json(allCourses);
   })
 );
@@ -28,7 +31,7 @@ router.get(
   '/:id',
   asyncHandler(async (req, res) => {
     const courseId = req.params.id;
-
+    
     const course = await Course.findByPk(courseId, {
       attributes: {
         exclude: ['createdAt', 'updatedAt']
@@ -37,10 +40,13 @@ router.get(
         {
           model: User,
           as: 'user',
+          attributes: {
+            exclude: ['createdAt', 'updatedAt', 'password']
+          }
         },
       ],
     });
-
+    
     res.status(200).json(course);
   })
 );
@@ -49,12 +55,20 @@ router.post(
   '/',
   authenticateUser,
   asyncHandler(async (req, res) => {
-    const createData = req.body;
-
-    await Course.create(createData);
-
-    res.setHeader('Location', '/');
-    res.status(201).end();
+    try {
+      const { body } = req;
+      
+      await Course.create(body);
+      
+      res.setHeader('Location', '/').status(201).end();
+    } catch(error) {
+      if (error.name === 'SequelizeValidationError' || error.name === 'SequelizeUniqueConstraintError') {
+        const errors = error.errors.map(err => err.message);
+        res.status(400).json({ errors });
+      } else {
+        throw error;
+      }
+    }
   })
 );
 
@@ -94,11 +108,11 @@ router.delete(
     try {
       const { currentUser, body, params } = req;
       const course = await Course.findByPk(params.id);
-    
+      
       if (!course) {
         res.status(404).json({ message: 'Course Not Found'})
       }
-    
+      
       if ( currentUser.id === course.userId ) {
         await course.destroy();
         res.status(204).end();
