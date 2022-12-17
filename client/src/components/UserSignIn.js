@@ -1,7 +1,13 @@
-import React from 'react';
+import React, { createRef } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
 
 const UserSignIn = () => {
+  const { signIn } = useAuthContext();
+
+  const emailRef = createRef();
+  const passwordRef = createRef();
+
   const handleCancel = (event) => {
     event.preventDefault();
     // location.href = 'index.html';
@@ -9,6 +15,17 @@ const UserSignIn = () => {
 
   const handleSubmit = (event) => {
     event.preventDefault();
+
+    console.log('event.target: ', event.currentTarget);
+
+    const user = {
+      emailAddress: emailRef.current.value,
+      password: passwordRef.current.value,
+    };
+
+    // console.log('user: ', user);
+
+    signIn(user);
 
     console.log('submitting');
   };
@@ -19,9 +36,11 @@ const UserSignIn = () => {
 
       <form onSubmit={handleSubmit}>
         <label htmlFor="emailAddress">Email Address</label>
-        <input id="emailAddress" name="emailAddress" type="email" value="" />
+        <input id="emailAddress" name="emailAddress" type="email" defaultValue="" ref={emailRef} />
+
         <label htmlFor="password">Password</label>
-        <input id="password" name="password" type="password" value="" />
+        <input id="password" name="password" type="password" defaultValue="" ref={passwordRef} />
+
         <button className="button" type="submit">
           Sign In
         </button>
