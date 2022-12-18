@@ -1,10 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../utils/apiClient';
-import { Link, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
+import ReactMarkdown from 'react-markdown';
 
 const CourseDetail = () => {
   const { authenticatedUser } = useAuthContext();
+  const navigate = useNavigate();
 
   console.log('authenticatedUser: ', authenticatedUser);
 
@@ -15,15 +17,15 @@ const CourseDetail = () => {
     if (!course) {
       apiClient(`courses/${params.id}`)
         .then((responseData) => {
-          // TODO: split description?
-          // TODO: split materialsNeeded?
           setCourse(responseData);
         })
         .catch((error) => {
-          console.log('error happened: ', error);
+          if (error.statusCode === 404) {
+            navigate('/notfound');
+          }
         });
     }
-  }, [course, params.id]);
+  }, [course, navigate, params.id]);
 
   console.log('course: ', course);
 
@@ -58,7 +60,7 @@ const CourseDetail = () => {
                   <h3 className="course--detail--title">Course</h3>
                   <h4 className="course--name">{course.title}</h4>
                   <p>{`By ${course.user.firstName} ${course.user.lastName}`}</p>
-                  {course.description}
+                  <ReactMarkdown>{course.description}</ReactMarkdown>
                 </div>
                 <div>
                   <h3 className="course--detail--title">Estimated Time</h3>
@@ -66,7 +68,7 @@ const CourseDetail = () => {
 
                   <h3 className="course--detail--title">Materials Needed</h3>
                   <ul className="course--detail--list">
-                    <li key={`course-material-item-${course.id}`}>{course.materialsNeeded}</li>
+                    <ReactMarkdown>{course.materialsNeeded}</ReactMarkdown>
                   </ul>
                 </div>
               </>

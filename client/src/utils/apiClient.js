@@ -16,6 +16,7 @@ const apiClient = async (endpoint, { data, headers: customHeaders, ...customConf
     if (response.ok) {
       return data;
     } else {
+      console.log('data ERRORS CLIENT: ', data);
       return Promise.reject(data.errors);
     }
   });

@@ -1,27 +1,49 @@
 import React, { createContext, useContext, useState } from 'react';
 import { apiClient } from '../utils/apiClient';
 
-const AuthContext = createContext(undefined);
+const sessionStorageKey = '__authenticated_user__';
+
+const getAuthUser = async () => {
+  return window.sessionStorage.getItem(sessionStorageKey);
+};
+
+const setAuthUser = async (user) => {
+  window.sessionStorage.setItem(sessionStorageKey, user);
+};
+
+const AuthContext = createContext({
+  authenticatedUser: getAuthUser(),
+  getAuthUser: getAuthUser,
+  signIn: undefined,
+  signOut: undefined,
+});
 
 const AuthProvider = (props) => {
   const [authenticatedUser, setAuthenticatedUser] = useState();
 
-  const signIn = (user) => {
-    const authHeader = btoa(`${user.emailAddress}:${user.password}`);
-    // joe@smith.com
-    // joepassword
+  const signIn = async (user) => {
+    const authenticatedUserInSessionStorage = await getAuthUser();
 
-    apiClient('users', {
-      headers: {
-        Authorization: `Basic ${authHeader}`,
-      },
-    })
-      .then((userResponse) => {
-        setAuthenticatedUser(userResponse);
+    if (authenticatedUserInSessionStorage) {
+      setAuthenticatedUser(JSON.parse(authenticatedUserInSessionStorage));
+    } else {
+      const authHeader = btoa(`${user.emailAddress}:${user.password}`);
+      // joe@smith.com
+      // joepassword
+
+      apiClient('users', {
+        headers: {
+          Authorization: `Basic ${authHeader}`,
+        },
       })
-      .catch((error) => {
-        console.log('Error Sign In: ', error);
-      });
+        .then(async (userResponse) => {
+          await setAuthUser(JSON.stringify(userResponse));
+          setAuthenticatedUser(userResponse);
+        })
+        .catch((error) => {
+          console.log('Error Sign In: ', error);
+        });
+    }
   };
 
   const signOut = () => {
@@ -32,6 +54,7 @@ const AuthProvider = (props) => {
     authenticatedUser,
     signIn,
     signOut,
+    getAuthUser,
   };
 
   // eslint-disable-next-line react/prop-types

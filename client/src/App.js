@@ -13,6 +13,8 @@ import UserSignIn from './components/UserSignIn';
 import UserSignOut from './components/UserSignOut';
 import UserSignUp from './components/UserSignUp';
 import PrivateRoute from './components/PrivateRoute';
+import Forbidden from './components/Forbidden';
+import Error from './components/Error';
 
 const App = () => {
   return (
@@ -42,6 +44,9 @@ const App = () => {
         <Route path="signin" element={<UserSignIn />} />
         <Route path="signup" element={<UserSignUp />} />
         <Route path="signout" element={<UserSignOut />} />
+        <Route path="notfound" element={<NotFound />} />
+        <Route path="forbidden" element={<Forbidden />} />
+        <Route path="error" element={<Error />} />
         <Route path="*" element={<NotFound />} />
       </Route>
     </Routes>
