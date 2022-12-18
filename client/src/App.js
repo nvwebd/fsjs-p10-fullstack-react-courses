@@ -21,8 +21,23 @@ const App = () => {
         <Route index element={<Courses />} />
         <Route path="courses">
           <Route path=":id" element={<CourseDetail />} />
-          <PrivateRoute path=":id/update" element={<UpdateCourse />} />
-          <PrivateRoute path="create" element={<CreateCourse />} />
+          <Route
+            path=":id/update"
+            element={
+              <PrivateRoute>
+                {' '}
+                <UpdateCourse />
+              </PrivateRoute>
+            }
+          />
+          <Route
+            path="create"
+            element={
+              <PrivateRoute>
+                <CreateCourse />
+              </PrivateRoute>
+            }
+          />
         </Route>
         <Route path="signin" element={<UserSignIn />} />
         <Route path="signup" element={<UserSignUp />} />

@@ -1,6 +1,12 @@
-'use strict';
+"use strict";
 
-const Sequelize = require('sequelize');
+const Sequelize = require("sequelize");
+
+/**
+ * set up the Course Model
+ * @param sequelize
+ * @returns {Course}
+ */
 
 module.exports = (sequelize) => {
   class Course extends Sequelize.Model {}
@@ -9,36 +15,52 @@ module.exports = (sequelize) => {
     {
       title: {
         type: Sequelize.STRING,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "The course title is required and cannot be empty",
+          },
+          notNull: {
+            msg: "Title is required",
+          },
+        },
       },
       description: {
         type: Sequelize.TEXT,
-        allowNull: false
+        allowNull: false,
+        validate: {
+          notEmpty: {
+            msg: "The course description is required and cannot be empty",
+          },
+          notNull: {
+            msg: "Description is required",
+          },
+        },
       },
       estimatedTime: {
-        type: Sequelize.STRING
+        type: Sequelize.STRING,
       },
       materialsNeeded: {
-        type: Sequelize.STRING
-      }
+        type: Sequelize.STRING,
+      },
     },
     {
       sequelize,
     }
   );
-  
+
   /**
-   * create Course associations
+   * create Course association to User
    * @param models {Sequelize.Model<User | Course>}
    */
   Course.associate = (models) => {
     Course.belongsTo(models.User, {
-      as: 'user',
+      as: "user",
       foreignKey: {
-        field: 'userId',
-        allowNull: true
+        field: "userId",
+        allowNull: true,
       },
-      constraints: false
+      constraints: false,
     });
   };
 

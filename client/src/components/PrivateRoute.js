@@ -1,18 +1,19 @@
 import React from 'react';
-import { Route, useNavigate } from 'react-router-dom';
+
+import { Navigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
 const PrivateRoute = (props) => {
-  const { children, path } = props;
+  // eslint-disable-next-line react/prop-types
+  const { children } = props;
 
   const { authenticatedUser } = useAuthContext();
-  const navigate = useNavigate();
 
   if (!authenticatedUser) {
-    navigate('/signin');
+    return <Navigate to="/signin" replace />;
   }
 
-  return <Route path={path} element={children} />;
+  return children;
 };
 
 export default PrivateRoute;
