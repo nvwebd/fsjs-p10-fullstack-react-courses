@@ -1,5 +1,5 @@
 import React, { createContext, useContext, useState } from 'react';
-import { client } from '../utils/apiClient';
+import { apiClient } from '../utils/apiClient';
 
 const AuthContext = createContext(undefined);
 
@@ -11,7 +11,7 @@ const AuthProvider = (props) => {
     // joe@smith.com
     // joepassword
 
-    client('users', {
+    apiClient('users', {
       headers: {
         Authorization: `Basic ${authHeader}`,
       },

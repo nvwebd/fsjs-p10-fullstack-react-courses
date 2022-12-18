@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { client } from '../utils/apiClient';
+import { apiClient } from '../utils/apiClient';
 import { Link } from 'react-router-dom';
 
 const Courses = () => {
@@ -7,7 +7,7 @@ const Courses = () => {
 
   useEffect(() => {
     if (courses.length === 0) {
-      client('courses')
+      apiClient('courses')
         .then((responseData) => {
           setCourses(responseData);
         })

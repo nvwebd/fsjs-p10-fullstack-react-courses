@@ -1,21 +1,50 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { apiClient } from '../utils/apiClient';
 
 const CreateCourse = () => {
-  const handleCreateCourseCancel = () => {};
+  const navigate = useNavigate();
+  const [createCourseErrors, setCreateCourseErrors] = useState([]);
 
-  const handleCreateCourseSubmit = () => {};
+  const handleCreateCourseCancel = () => {
+    navigate('/');
+  };
+
+  const handleCreateCourseSubmit = (event) => {
+    event.preventDefault();
+
+    const formElements = event.target.elements;
+
+    const createCourseData = {
+      courseTitle: formElements.courseTitle.value || undefined,
+      courseDescription: formElements.courseDescription.value || undefined,
+      estimatedTime: formElements.estimatedTime.value || undefined,
+      materialsNeeded: formElements.materialsNeeded.value || undefined,
+    };
+
+    apiClient('users', { data: createCourseData })
+      .then((createCourseDataResponse) => {
+        navigate('/');
+      })
+      .catch((errors) => {
+        setCreateCourseErrors(errors);
+      });
+  };
 
   return (
     <div className="wrap">
       <h2>Create Course</h2>
 
-      <div className="validation--errors">
-        <h3>Validation Errors</h3>
-        <ul>
-          <li>Please provide a value for &quot;Title&quot;</li>
-          <li>Please provide a value for &quot;Description&quot;</li>
-        </ul>
-      </div>
+      {createCourseErrors.length > 0 ? (
+        <div className="validation--errors">
+          <h3>Validation Errors</h3>
+          <ul>
+            {createCourseErrors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <form onSubmit={handleCreateCourseSubmit}>
         <div className="main--flex">

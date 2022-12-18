@@ -1,14 +1,49 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { apiClient } from '../utils/apiClient';
+import { useNavigate } from 'react-router-dom';
 
 const UpdateCourse = () => {
+  const navigate = useNavigate();
+  const [updateCourseErrors, setUpdateCourseErrors] = useState([]);
   const handleUpdateCourseSubmit = () => {};
-  const handleUpdateCourseCancel = () => {};
+  const handleUpdateCourseCancel = (event) => {
+    event.preventDefault();
+
+    const formElements = event.target.elements;
+
+    const updateCourseData = {
+      courseTitle: formElements.courseTitle.value || undefined,
+      courseDescription: formElements.courseDescription.value || undefined,
+      estimatedTime: formElements.estimatedTime.value || undefined,
+      materialsNeeded: formElements.materialsNeeded.value || undefined,
+    };
+
+    apiClient('users', { data: updateCourseData })
+      .then((createCourseDataResponse) => {
+        navigate('/');
+      })
+      .catch((errors) => {
+        setUpdateCourseErrors(errors);
+      });
+  };
 
   console.log('UPDATE COURSE: ');
 
   return (
     <div className="wrap">
       <h2>Update Course</h2>
+
+      {updateCourseErrors.length > 0 ? (
+        <div className="validation--errors">
+          <h3>Validation Errors</h3>
+          <ul>
+            {updateCourseErrors.map((error) => (
+              <li key={error}>{error}</li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
+
       <form onSubmit={handleUpdateCourseSubmit}>
         <div className="main--flex">
           <div>

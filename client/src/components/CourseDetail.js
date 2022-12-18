@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react';
-import { client } from '../utils/apiClient';
+import { apiClient } from '../utils/apiClient';
 import { Link, useParams } from 'react-router-dom';
+import { useAuthContext } from '../context/AuthContext';
 
 const CourseDetail = () => {
+  const { authenticatedUser } = useAuthContext();
+
+  console.log('authenticatedUser: ', authenticatedUser);
+
   const [course, setCourse] = useState();
   const params = useParams();
 
   useEffect(() => {
     if (!course) {
-      client(`courses/${params.id}`)
+      apiClient(`courses/${params.id}`)
         .then((responseData) => {
           // TODO: split description?
           // TODO: split materialsNeeded?
@@ -18,7 +23,7 @@ const CourseDetail = () => {
           console.log('error happened: ', error);
         });
     }
-  }, [course]);
+  }, [course, params.id]);
 
   console.log('course: ', course);
 
@@ -26,12 +31,17 @@ const CourseDetail = () => {
     <>
       <div className="actions--bar">
         <div className="wrap">
-          <Link className="button" to={`/courses/${params.id}/update`}>
-            Update Course
-          </Link>
-          <Link className="button" to="/course/delete">
-            Delete Course
-          </Link>
+          {authenticatedUser && course && authenticatedUser.id === course.userId ? (
+            <>
+              <Link className="button" to={`/courses/${params.id}/update`}>
+                Update Course
+              </Link>
+              <Link className="button" to="/course/delete">
+                Delete Course
+              </Link>
+            </>
+          ) : null}
+
           <Link className="button button-secondary" to="/">
             Return to List
           </Link>
