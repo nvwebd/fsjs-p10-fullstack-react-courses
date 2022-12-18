@@ -9,7 +9,8 @@ const UserSignUp = () => {
   // const { signIn } = useAuthContext();
 
   const [signupErrors, setSignupErrors] = useState([]);
-  const handleSignUpCancel = () => {
+  const handleSignUpCancel = (event) => {
+    event.preventDefault();
     navigate('/');
   };
 

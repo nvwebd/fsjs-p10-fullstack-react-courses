@@ -7,11 +7,22 @@ import ReactMarkdown from 'react-markdown';
 const CourseDetail = () => {
   const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
-
-  console.log('authenticatedUser: ', authenticatedUser);
-
-  const [course, setCourse] = useState();
   const params = useParams();
+
+  /**
+   * state to follow the current course changes ( based on :id params )
+   */
+  const [course, setCourse] = useState();
+
+  const handleDeleteCourse = () => {
+    apiClient(`courses/${params.id}`, { method: 'DELETE', user: authenticatedUser })
+      .then(() => {
+        navigate(`/`);
+      })
+      .catch(() => {
+        console.error('Error deleting course');
+      });
+  };
 
   useEffect(() => {
     if (!course) {
@@ -27,8 +38,6 @@ const CourseDetail = () => {
     }
   }, [course, navigate, params.id]);
 
-  console.log('course: ', course);
-
   return (
     <>
       <div className="actions--bar">
@@ -38,9 +47,9 @@ const CourseDetail = () => {
               <Link className="button" to={`/courses/${params.id}/update`}>
                 Update Course
               </Link>
-              <Link className="button" to="/course/delete">
+              <button className="button" onClick={handleDeleteCourse}>
                 Delete Course
-              </Link>
+              </button>
             </>
           ) : null}
 

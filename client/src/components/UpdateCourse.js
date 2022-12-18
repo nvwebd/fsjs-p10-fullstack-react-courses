@@ -31,6 +31,7 @@ const UpdateCourse = () => {
       });
   };
   const handleUpdateCourseCancel = (event) => {
+    event.preventDefault();
     navigate('/');
   };
 

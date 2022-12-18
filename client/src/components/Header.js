@@ -15,7 +15,7 @@ const Header = () => {
           {authenticatedUser ? (
             <ul className="header--signedin">
               <li>
-                Welcome, {authenticatedUser.user.firstName} {authenticatedUser.user.lastName}!
+                Welcome, {authenticatedUser.firstName} {authenticatedUser.lastName}!
               </li>
               <li>
                 <Link to="/signout">Sign Out</Link>

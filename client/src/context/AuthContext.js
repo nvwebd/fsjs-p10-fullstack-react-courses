@@ -22,19 +22,18 @@ const AuthProvider = (props) => {
   const [authenticatedUser, setAuthenticatedUser] = useState();
 
   const signIn = async (user) => {
+    console.log('signIn: ', user);
     const authenticatedUserInSessionStorage = await getAuthUser();
 
     if (authenticatedUserInSessionStorage) {
       setAuthenticatedUser(JSON.parse(authenticatedUserInSessionStorage));
     } else {
-      const authHeader = btoa(`${user.emailAddress}:${user.password}`);
-      // joe@smith.com
-      // joepassword
+      // const authHeader = btoa(`${user.emailAddress}:${user.password}`);
+      // // joe@smith.com
+      // // joepassword
 
       apiClient('users', {
-        headers: {
-          Authorization: `Basic ${authHeader}`,
-        },
+        user: user,
       })
         .then(async (userResponse) => {
           await setAuthUser(JSON.stringify(userResponse));
@@ -48,6 +47,7 @@ const AuthProvider = (props) => {
 
   const signOut = () => {
     setAuthenticatedUser(undefined);
+    window.sessionStorage.removeItem(sessionStorageKey);
   };
 
   const value = {

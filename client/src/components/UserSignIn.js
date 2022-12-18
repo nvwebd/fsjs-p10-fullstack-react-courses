@@ -8,10 +8,10 @@ const UserSignIn = () => {
 
   const handleCancel = (event) => {
     event.preventDefault();
-    navigate('/');
+    navigate(-1);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const user = {
@@ -19,9 +19,9 @@ const UserSignIn = () => {
       password: event.target.elements.password.value || '',
     };
 
-    signIn(user);
+    await signIn(user);
 
-    navigate('/');
+    navigate(-1);
   };
 
   return (

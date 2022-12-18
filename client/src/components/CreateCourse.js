@@ -6,7 +6,8 @@ const CreateCourse = () => {
   const navigate = useNavigate();
   const [createCourseErrors, setCreateCourseErrors] = useState([]);
 
-  const handleCreateCourseCancel = () => {
+  const handleCreateCourseCancel = (event) => {
+    event.preventDefault();
     navigate('/');
   };
 
@@ -50,19 +51,19 @@ const CreateCourse = () => {
         <div className="main--flex">
           <div>
             <label htmlFor="courseTitle">Course Title</label>
-            <input id="courseTitle" name="courseTitle" type="text" value="" />
+            <input id="courseTitle" name="courseTitle" type="text" defaultValue="" />
 
             <p>By Joe Smith</p>
 
             <label htmlFor="courseDescription">Course Description</label>
-            <textarea id="courseDescription" name="courseDescription" />
+            <textarea id="courseDescription" name="courseDescription" defaultValue="" />
           </div>
           <div>
             <label htmlFor="estimatedTime">Estimated Time</label>
-            <input id="estimatedTime" name="estimatedTime" type="text" value="" />
+            <input id="estimatedTime" name="estimatedTime" type="text" defaultValue="" />
 
             <label htmlFor="materialsNeeded">Materials Needed</label>
-            <textarea id="materialsNeeded" name="materialsNeeded"></textarea>
+            <textarea id="materialsNeeded" name="materialsNeeded" defaultValue="" />
           </div>
         </div>
 
