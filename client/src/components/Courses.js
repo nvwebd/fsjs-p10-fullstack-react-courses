@@ -11,6 +11,9 @@ const Courses = () => {
   const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
 
+  /**
+   * if courses are not loaded load all course from the API into the state
+   */
   useEffect(() => {
     if (courses.length === 0) {
       apiClient('courses')

@@ -8,6 +8,9 @@ import { useAuthContext } from '../context/AuthContext';
  * @constructor
  */
 const Header = () => {
+  /**
+   * get the authenticated user from the context
+   */
   const { authenticatedUser } = useAuthContext();
 
   return (

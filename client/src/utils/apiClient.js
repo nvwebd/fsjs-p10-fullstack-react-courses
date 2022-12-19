@@ -42,11 +42,16 @@ const apiClient = async (
    * call the API using fetch and return the data as a Promise
    */
   return window.fetch(`${apiUrl}/${endpoint}`, clientConfig).then(async (response) => {
-    console.log('response: ', response);
+    /**
+     * if requests are OK then return true ( no content response )
+     */
     if (response.status === 201 || response.status === 204) {
       return true;
     }
 
+    /**
+     * if a server error occurs just reject the HTTP call for error handling
+     */
     if (response.status === 500) {
       return Promise.reject(500);
     }

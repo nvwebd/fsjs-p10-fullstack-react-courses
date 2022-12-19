@@ -23,6 +23,9 @@ const CourseDetail = () => {
    * delete course when the button is clicked
    */
   const handleDeleteCourse = () => {
+    /**
+     * send HTTP request to delete the Course
+     */
     apiClient(`courses/${params.id}`, { method: 'DELETE', user: authenticatedUser })
       .then(() => {
         navigate(`/`);
@@ -36,6 +39,9 @@ const CourseDetail = () => {
       });
   };
 
+  /**
+   * before component mount check if we have the course data else load it into the state
+   */
   useEffect(() => {
     if (!course) {
       apiClient(`courses/${params.id}`)

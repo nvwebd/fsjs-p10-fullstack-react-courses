@@ -13,10 +13,16 @@ const PrivateRoute = (props) => {
   // eslint-disable-next-line react/prop-types
   const { children } = props;
 
+  /**
+   * get authenticated user from context
+   */
   const { authenticatedUser } = useAuthContext();
 
+  /**
+   * if no authenticated user is available navigate the user to the signin page
+   */
   if (!authenticatedUser) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/signin" />;
   }
 
   return children;
