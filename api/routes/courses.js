@@ -66,8 +66,6 @@ router.post(
     try {
       const { body } = req;
 
-      console.log("createBody: ", body);
-
       await Course.create(body);
 
       res.setHeader("Location", "/").status(201).end();

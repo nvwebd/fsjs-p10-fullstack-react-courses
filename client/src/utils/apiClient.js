@@ -42,7 +42,6 @@ const apiClient = async (
    * call the API using fetch and return the data as a Promise
    */
   return window.fetch(`${apiUrl}/${endpoint}`, clientConfig).then(async (response) => {
-    console.log('RESPONSE: ,', response);
     /**
      * if requests are OK then return true ( no content response )
      */
