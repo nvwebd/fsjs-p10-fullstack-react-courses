@@ -1,8 +1,10 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
+import { useAuthContext } from '../context/AuthContext';
 
 const CreateCourse = () => {
+  const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
   const [createCourseErrors, setCreateCourseErrors] = useState([]);
 
@@ -17,18 +19,23 @@ const CreateCourse = () => {
     const formElements = event.target.elements;
 
     const createCourseData = {
-      courseTitle: formElements.courseTitle.value || undefined,
-      courseDescription: formElements.courseDescription.value || undefined,
+      title: formElements.courseTitle.value || undefined,
+      description: formElements.courseDescription.value || undefined,
       estimatedTime: formElements.estimatedTime.value || undefined,
       materialsNeeded: formElements.materialsNeeded.value || undefined,
+      userId: authenticatedUser.id,
     };
 
-    apiClient('users', { data: createCourseData })
-      .then((createCourseDataResponse) => {
+    apiClient('courses', { data: createCourseData, user: authenticatedUser })
+      .then(() => {
         navigate('/');
       })
       .catch((errors) => {
-        setCreateCourseErrors(errors);
+        if (errors === 500) {
+          navigate('/error');
+        } else {
+          setCreateCourseErrors(errors);
+        }
       });
   };
 

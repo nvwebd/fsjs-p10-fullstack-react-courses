@@ -66,6 +66,8 @@ router.post(
     try {
       const { body } = req;
 
+      console.log("createBody: ", body);
+
       await Course.create(body);
 
       res.setHeader("Location", "/").status(201).end();
@@ -89,6 +91,7 @@ router.put(
   asyncHandler(async (req, res) => {
     try {
       const { currentUser, body, params } = req;
+
       const course = await Course.findByPk(params.id);
 
       if (!course) {

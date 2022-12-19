@@ -16,6 +16,11 @@ import PrivateRoute from './components/PrivateRoute';
 import Forbidden from './components/Forbidden';
 import Error from './components/Error';
 
+/**
+ * Render the Main App Component Routing
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const App = () => {
   return (
     <Routes>
@@ -27,7 +32,6 @@ const App = () => {
             path=":id/update"
             element={
               <PrivateRoute>
-                {' '}
                 <UpdateCourse />
               </PrivateRoute>
             }

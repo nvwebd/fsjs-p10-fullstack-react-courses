@@ -2,34 +2,67 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 import { apiClient } from '../utils/apiClient';
-// import { useAuthContext } from '../context/AuthContext';
+import { useAuthContext } from '../context/AuthContext';
 
+/**
+ * Render a Signup Form to create a new user
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const UserSignUp = () => {
+  const { signIn, signOut } = useAuthContext();
   const navigate = useNavigate();
-  // const { signIn } = useAuthContext();
-
+  /**
+   * errors state
+   */
   const [signupErrors, setSignupErrors] = useState([]);
+  /**
+   * Button click event handler to cancel user registration and route back to root page
+   * @param event { Event }
+   */
   const handleSignUpCancel = (event) => {
     event.preventDefault();
     navigate('/');
   };
 
+  /**
+   * Submit event handler to create a new user account
+   * @param event {Event}
+   */
   const handleSignUpSubmit = (event) => {
     event.preventDefault();
 
+    /**
+     * Set up the sign in data object
+     * @type {{firstName: string | undefined, lastName: string | undefined, emailAddress: string | undefined, password: string | undefined}}
+     */
     const signInData = {
       firstName: event.target.elements.firstName.value || undefined,
       lastName: event.target.elements.lastName.value || undefined,
-      email: event.target.elements.emailAddress.value || undefined,
+      emailAddress: event.target.elements.emailAddress.value || undefined,
       password: event.target.elements.password.value || undefined,
     };
 
+    /**
+     * call the client with new user data
+     */
     apiClient('users', { data: signInData })
-      .then((signInResponse) => {
+      .then(async () => {
+        await signOut();
+
+        await signIn({
+          email: signInData.emailAddress,
+          password: signInData.password,
+        });
+
         navigate('/');
       })
       .catch((errors) => {
-        setSignupErrors(errors);
+        if (errors === 500) {
+          navigate('/error');
+        } else {
+          setSignupErrors(errors);
+        }
       });
   };
 

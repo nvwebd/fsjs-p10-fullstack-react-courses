@@ -2,6 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
+/**
+ * Render the App Header with the Root Link, SignUp and SignIn, or User Name with SignOut links
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Header = () => {
   const { authenticatedUser } = useAuthContext();
 
@@ -24,10 +29,10 @@ const Header = () => {
           ) : (
             <ul className="header--signedout">
               <li>
-                <a href="/signup">Sign Up</a>
+                <Link to="/signup">Sign Up</Link>
               </li>
               <li>
-                <a href="/signin">Sign In</a>
+                <Link to="/signin">Sign In</Link>
               </li>
             </ul>
           )}

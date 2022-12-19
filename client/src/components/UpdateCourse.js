@@ -3,33 +3,52 @@ import { apiClient } from '../utils/apiClient';
 import { useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
+/**
+ * Render the selected Course with Input Elements to update the Course
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const UpdateCourse = () => {
+  const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
   const params = useParams();
-  const { authenticatedUser } = useAuthContext();
 
   const [courseData, setCourseData] = useState();
   const [updateCourseErrors, setUpdateCourseErrors] = useState([]);
+  /**
+   * Handle Update Submitted Course
+   * @param event { Event}
+   */
   const handleUpdateCourseSubmit = (event) => {
     event.preventDefault();
 
-    const formElements = event.target.elements;
-
     const updateCourseData = {
-      courseTitle: formElements.courseTitle.value || undefined,
-      courseDescription: formElements.courseDescription.value || undefined,
-      estimatedTime: formElements.estimatedTime.value || undefined,
-      materialsNeeded: formElements.materialsNeeded.value || undefined,
+      title: event.target.elements.courseTitle.value || undefined,
+      description: event.target.elements.courseDescription.value || undefined,
+      estimatedTime: event.target.elements.estimatedTime.value || undefined,
+      materialsNeeded: event.target.elements.materialsNeeded.value || undefined,
     };
 
-    apiClient('users', { data: updateCourseData })
-      .then((createCourseDataResponse) => {
+    apiClient(`courses/${params.id}`, {
+      data: updateCourseData,
+      user: authenticatedUser,
+      method: 'PUT',
+    })
+      .then(() => {
         navigate('/');
       })
       .catch((errors) => {
-        setUpdateCourseErrors(errors);
+        if (errors === 500) {
+          navigate('/error');
+        } else {
+          setUpdateCourseErrors(errors);
+        }
       });
   };
+  /**
+   * Handle cancelling the update
+   * @param event { Event }
+   */
   const handleUpdateCourseCancel = (event) => {
     event.preventDefault();
     navigate('/');
@@ -46,6 +65,10 @@ const UpdateCourse = () => {
           }
         })
         .catch((error) => {
+          if (error === 500) {
+            navigate('/error');
+          }
+
           if (error.statusCode === 404) {
             navigate('/notfound');
           }

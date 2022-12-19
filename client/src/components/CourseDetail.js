@@ -4,6 +4,11 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import ReactMarkdown from 'react-markdown';
 
+/**
+ * Render the Details of the selected Course
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const CourseDetail = () => {
   const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
@@ -14,13 +19,20 @@ const CourseDetail = () => {
    */
   const [course, setCourse] = useState();
 
+  /**
+   * delete course when the button is clicked
+   */
   const handleDeleteCourse = () => {
     apiClient(`courses/${params.id}`, { method: 'DELETE', user: authenticatedUser })
       .then(() => {
         navigate(`/`);
       })
-      .catch(() => {
-        console.error('Error deleting course');
+      .catch((errors) => {
+        if (errors === 500) {
+          navigate('/error');
+        } else {
+          console.error('Error deleting course: ', errors);
+        }
       });
   };
 
@@ -31,6 +43,10 @@ const CourseDetail = () => {
           setCourse(responseData);
         })
         .catch((error) => {
+          if (error === 500) {
+            navigate('/error');
+          }
+
           if (error.statusCode === 404) {
             navigate('/notfound');
           }
