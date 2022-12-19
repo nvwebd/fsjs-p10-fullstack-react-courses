@@ -9,10 +9,10 @@ const sessionStorageKey = '__authenticated_user__';
 
 /**
  * Get the current logged in user session data
- * @returns {Promise<string>}
+ * @returns {string}
  */
-const getAuthUser = async () => {
-  return window.sessionStorage.getItem(sessionStorageKey);
+const getAuthUser = () => {
+  return JSON.parse(window.sessionStorage.getItem(sessionStorageKey));
 };
 
 /**
@@ -42,20 +42,18 @@ const AuthContext = createContext({
  * @constructor
  */
 const AuthProvider = (props) => {
-  const [authenticatedUser, setAuthenticatedUser] = useState();
+  const [authenticatedUser, setAuthenticatedUser] = useState(() => {
+    return getAuthUser();
+  });
 
   const signIn = async (user) => {
-    const authenticatedUserInSessionStorage = await getAuthUser();
+    const authenticatedUserInSessionStorage = getAuthUser();
 
+    /**
+     * if a user exists in the sessionStorage then
+     */
     if (authenticatedUserInSessionStorage) {
-      const parsedSessionStorage = JSON.parse(authenticatedUserInSessionStorage);
-
-      const authenticatedUserWithPassword = {
-        ...parsedSessionStorage,
-        password: user.password,
-      };
-
-      setAuthenticatedUser(authenticatedUserWithPassword);
+      setAuthenticatedUser(authenticatedUserInSessionStorage);
     } else {
       apiClient('users', {
         user: user,
@@ -66,7 +64,7 @@ const AuthProvider = (props) => {
             password: user.password,
           };
 
-          await setAuthUser(JSON.stringify(userResponse));
+          await setAuthUser(JSON.stringify(userWithPassword));
           setAuthenticatedUser(userWithPassword);
         })
         .catch((error) => {

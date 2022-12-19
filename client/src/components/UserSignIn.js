@@ -8,14 +8,26 @@ import { useAuthContext } from '../context/AuthContext';
  * @constructor
  */
 const UserSignIn = () => {
+  /**
+   * get the signIn function from the context
+   */
   const { signIn } = useAuthContext();
   const navigate = useNavigate();
 
+  /**
+   * handle cancel button click to prevent form submission and route to ROOR route
+   * @param event { Event}
+   */
   const handleCancel = (event) => {
     event.preventDefault();
-    navigate(-1);
+    navigate('/');
   };
 
+  /**
+   * handle submit handler to login the user
+   * @param event { Event }
+   * @returns {Promise<void>}
+   */
   const handleSubmit = async (event) => {
     event.preventDefault();
 
@@ -26,6 +38,9 @@ const UserSignIn = () => {
 
     await signIn(user);
 
+    /**
+     * navigate back to the previous page
+     */
     navigate(-1);
   };
 
@@ -49,7 +64,7 @@ const UserSignIn = () => {
         </button>
       </form>
       <p>
-        Don&apos;t have a user account? Click here to <Link to="signup">sign up</Link>!
+        Don&apos;t have a user account? Click here to <Link to="/signup">sign up</Link>!
       </p>
     </div>
   );

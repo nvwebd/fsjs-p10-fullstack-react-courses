@@ -9,12 +9,19 @@ import { useAuthContext } from '../context/AuthContext';
  * @constructor
  */
 const UpdateCourse = () => {
+  /**
+   * get authenticated user from Context
+   */
   const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
   const params = useParams();
 
+  /**
+   * state to track the course data
+   */
   const [courseData, setCourseData] = useState();
   const [updateCourseErrors, setUpdateCourseErrors] = useState([]);
+
   /**
    * Handle Update Submitted Course
    * @param event { Event}
@@ -22,13 +29,20 @@ const UpdateCourse = () => {
   const handleUpdateCourseSubmit = (event) => {
     event.preventDefault();
 
+    /**
+     * build data object to update the Course
+     * @type {{estimatedTime, materialsNeeded, description, title}}
+     */
     const updateCourseData = {
-      title: event.target.elements.courseTitle.value || undefined,
-      description: event.target.elements.courseDescription.value || undefined,
-      estimatedTime: event.target.elements.estimatedTime.value || undefined,
-      materialsNeeded: event.target.elements.materialsNeeded.value || undefined,
+      title: event.target.elements.courseTitle.value,
+      description: event.target.elements.courseDescription.value,
+      estimatedTime: event.target.elements.estimatedTime.value,
+      materialsNeeded: event.target.elements.materialsNeeded.value,
     };
 
+    /**
+     * send HTTP request to update the Course with the form data
+     */
     apiClient(`courses/${params.id}`, {
       data: updateCourseData,
       user: authenticatedUser,
@@ -45,6 +59,7 @@ const UpdateCourse = () => {
         }
       });
   };
+
   /**
    * Handle cancelling the update
    * @param event { Event }
@@ -54,11 +69,14 @@ const UpdateCourse = () => {
     navigate('/');
   };
 
+  /**
+   * before component mount we check the course data and load it if needed
+   */
   useEffect(() => {
     if (!courseData) {
       apiClient(`courses/${params.id}`)
         .then((course) => {
-          if (course.userId !== authenticatedUser.id) {
+          if (authenticatedUser && course.userId !== authenticatedUser.id) {
             navigate('/forbidden');
           } else {
             setCourseData(course);
@@ -74,7 +92,7 @@ const UpdateCourse = () => {
           }
         });
     }
-  }, [authenticatedUser.id, courseData, navigate, params.id]);
+  }, [authenticatedUser, courseData, navigate, params.id]);
 
   return (
     <div className="wrap">

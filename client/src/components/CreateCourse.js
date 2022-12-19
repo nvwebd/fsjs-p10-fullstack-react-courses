@@ -8,24 +8,37 @@ const CreateCourse = () => {
   const navigate = useNavigate();
   const [createCourseErrors, setCreateCourseErrors] = useState([]);
 
+  /**
+   * handle form cancel and redirect to the ROOT route /
+   * @param event { Event}
+   */
   const handleCreateCourseCancel = (event) => {
     event.preventDefault();
     navigate('/');
   };
 
+  /**
+   * handle new course submission
+   * @param event { Event }
+   */
   const handleCreateCourseSubmit = (event) => {
     event.preventDefault();
 
-    const formElements = event.target.elements;
-
+    /**
+     * build course data object to submit
+     * @type {{estimatedTime, materialsNeeded, description, title, userId: *}}
+     */
     const createCourseData = {
-      title: formElements.courseTitle.value || undefined,
-      description: formElements.courseDescription.value || undefined,
-      estimatedTime: formElements.estimatedTime.value || undefined,
-      materialsNeeded: formElements.materialsNeeded.value || undefined,
+      title: event.target.elements.courseTitle.value,
+      description: event.target.elements.courseDescription.value,
+      estimatedTime: event.target.elements.estimatedTime.value,
+      materialsNeeded: event.target.elements.materialsNeeded.value,
       userId: authenticatedUser.id,
     };
 
+    /**
+     * send HTTP request to create a new Course
+     */
     apiClient('courses', { data: createCourseData, user: authenticatedUser })
       .then(() => {
         navigate('/');
@@ -60,7 +73,9 @@ const CreateCourse = () => {
             <label htmlFor="courseTitle">Course Title</label>
             <input id="courseTitle" name="courseTitle" type="text" defaultValue="" />
 
-            <p>By Joe Smith</p>
+            <p>
+              By {authenticatedUser.firstName} {authenticatedUser.lastName}
+            </p>
 
             <label htmlFor="courseDescription">Course Description</label>
             <textarea id="courseDescription" name="courseDescription" defaultValue="" />

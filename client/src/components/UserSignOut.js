@@ -10,11 +10,14 @@ import { Navigate } from 'react-router-dom';
 const UserSignOut = () => {
   const { signOut } = useAuthContext();
 
+  /**
+   * before mount trigger the signout funtion and navigate user to ROOT route
+   */
   useEffect(() => {
     signOut();
   }, [signOut]);
 
-  return <Navigate to="/" replace />;
+  return <Navigate to="/" />;
 };
 
 export default UserSignOut;
