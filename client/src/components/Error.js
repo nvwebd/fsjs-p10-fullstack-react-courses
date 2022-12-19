@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * Render a Error page when a 500 Error Code is returned by the API
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Error = () => {
   return (
     <div className="wrap">

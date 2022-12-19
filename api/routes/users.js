@@ -22,6 +22,7 @@ router.post(
       const userData = req.body;
 
       await User.create(userData);
+
       res.setHeader("Location", "/").status(201).end();
     } catch (error) {
       if (

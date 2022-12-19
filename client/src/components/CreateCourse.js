@@ -1,12 +1,15 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { apiClient } from '../utils/apiClient';
+import { useAuthContext } from '../context/AuthContext';
 
 const CreateCourse = () => {
+  const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
   const [createCourseErrors, setCreateCourseErrors] = useState([]);
 
-  const handleCreateCourseCancel = () => {
+  const handleCreateCourseCancel = (event) => {
+    event.preventDefault();
     navigate('/');
   };
 
@@ -16,18 +19,23 @@ const CreateCourse = () => {
     const formElements = event.target.elements;
 
     const createCourseData = {
-      courseTitle: formElements.courseTitle.value || undefined,
-      courseDescription: formElements.courseDescription.value || undefined,
+      title: formElements.courseTitle.value || undefined,
+      description: formElements.courseDescription.value || undefined,
       estimatedTime: formElements.estimatedTime.value || undefined,
       materialsNeeded: formElements.materialsNeeded.value || undefined,
+      userId: authenticatedUser.id,
     };
 
-    apiClient('users', { data: createCourseData })
-      .then((createCourseDataResponse) => {
+    apiClient('courses', { data: createCourseData, user: authenticatedUser })
+      .then(() => {
         navigate('/');
       })
       .catch((errors) => {
-        setCreateCourseErrors(errors);
+        if (errors === 500) {
+          navigate('/error');
+        } else {
+          setCreateCourseErrors(errors);
+        }
       });
   };
 
@@ -50,19 +58,19 @@ const CreateCourse = () => {
         <div className="main--flex">
           <div>
             <label htmlFor="courseTitle">Course Title</label>
-            <input id="courseTitle" name="courseTitle" type="text" value="" />
+            <input id="courseTitle" name="courseTitle" type="text" defaultValue="" />
 
             <p>By Joe Smith</p>
 
             <label htmlFor="courseDescription">Course Description</label>
-            <textarea id="courseDescription" name="courseDescription" />
+            <textarea id="courseDescription" name="courseDescription" defaultValue="" />
           </div>
           <div>
             <label htmlFor="estimatedTime">Estimated Time</label>
-            <input id="estimatedTime" name="estimatedTime" type="text" value="" />
+            <input id="estimatedTime" name="estimatedTime" type="text" defaultValue="" />
 
             <label htmlFor="materialsNeeded">Materials Needed</label>
-            <textarea id="materialsNeeded" name="materialsNeeded"></textarea>
+            <textarea id="materialsNeeded" name="materialsNeeded" defaultValue="" />
           </div>
         </div>
 

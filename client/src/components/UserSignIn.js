@@ -2,16 +2,21 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
+/**
+ * Render the SingIn Component for a User to sign in
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const UserSignIn = () => {
   const { signIn } = useAuthContext();
   const navigate = useNavigate();
 
   const handleCancel = (event) => {
     event.preventDefault();
-    navigate('/');
+    navigate(-1);
   };
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     const user = {
@@ -19,9 +24,9 @@ const UserSignIn = () => {
       password: event.target.elements.password.value || '',
     };
 
-    signIn(user);
+    await signIn(user);
 
-    navigate('/');
+    navigate(-1);
   };
 
   return (

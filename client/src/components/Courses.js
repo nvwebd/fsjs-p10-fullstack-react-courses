@@ -1,8 +1,14 @@
 import React, { useEffect, useState } from 'react';
 import { apiClient } from '../utils/apiClient';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
+/**
+ * Render all of the courses returned from the API
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Courses = () => {
+  const navigate = useNavigate();
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
@@ -11,11 +17,13 @@ const Courses = () => {
         .then((responseData) => {
           setCourses(responseData);
         })
-        .catch((error) => {
-          console.log('error happened: ', error);
+        .catch((errors) => {
+          if (errors === 500) {
+            navigate('/error');
+          }
         });
     }
-  }, [courses, setCourses]);
+  }, [courses, navigate, setCourses]);
 
   return (
     <div className="wrap main--grid">

@@ -4,14 +4,37 @@ import { Link, useNavigate, useParams } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 import ReactMarkdown from 'react-markdown';
 
+/**
+ * Render the Details of the selected Course
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const CourseDetail = () => {
   const { authenticatedUser } = useAuthContext();
   const navigate = useNavigate();
-
-  console.log('authenticatedUser: ', authenticatedUser);
-
-  const [course, setCourse] = useState();
   const params = useParams();
+
+  /**
+   * state to follow the current course changes ( based on :id params )
+   */
+  const [course, setCourse] = useState();
+
+  /**
+   * delete course when the button is clicked
+   */
+  const handleDeleteCourse = () => {
+    apiClient(`courses/${params.id}`, { method: 'DELETE', user: authenticatedUser })
+      .then(() => {
+        navigate(`/`);
+      })
+      .catch((errors) => {
+        if (errors === 500) {
+          navigate('/error');
+        } else {
+          console.error('Error deleting course: ', errors);
+        }
+      });
+  };
 
   useEffect(() => {
     if (!course) {
@@ -20,14 +43,16 @@ const CourseDetail = () => {
           setCourse(responseData);
         })
         .catch((error) => {
+          if (error === 500) {
+            navigate('/error');
+          }
+
           if (error.statusCode === 404) {
             navigate('/notfound');
           }
         });
     }
   }, [course, navigate, params.id]);
-
-  console.log('course: ', course);
 
   return (
     <>
@@ -38,9 +63,9 @@ const CourseDetail = () => {
               <Link className="button" to={`/courses/${params.id}/update`}>
                 Update Course
               </Link>
-              <Link className="button" to="/course/delete">
+              <button className="button" onClick={handleDeleteCourse}>
                 Delete Course
-              </Link>
+              </button>
             </>
           ) : null}
 

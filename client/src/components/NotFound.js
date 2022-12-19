@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * Render a NotFound page when a 404 is returned from the API or any uninitialized route is requested
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const NotFound = () => {
   return (
     <div className="wrap">

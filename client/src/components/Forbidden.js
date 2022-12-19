@@ -1,5 +1,10 @@
 import React from 'react';
 
+/**
+ * Render the Forbidden page when a user tries to access a Protected route or a protected action
+ * @returns {JSX.Element}
+ * @constructor
+ */
 const Forbidden = () => {
   return (
     <div className="wrap">
