@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { Navigate } from 'react-router-dom';
+import { Navigate, useLocation } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
 /**
@@ -9,9 +9,9 @@ import { useAuthContext } from '../context/AuthContext';
  * @returns {*|JSX.Element}
  * @constructor
  */
-const PrivateRoute = (props) => {
-  // eslint-disable-next-line react/prop-types
-  const { children } = props;
+// eslint-disable-next-line react/prop-types
+const PrivateRoute = ({ children }) => {
+  const location = useLocation();
 
   /**
    * get authenticated user from context
@@ -19,10 +19,11 @@ const PrivateRoute = (props) => {
   const { authenticatedUser } = useAuthContext();
 
   /**
-   * if no authenticated user is available navigate the user to the signin page
+   * if no authenticated user is available navigate the user to the signin page and update router state to mark
+   * where we routed from in the signin page
    */
   if (!authenticatedUser) {
-    return <Navigate to="/signin" replace />;
+    return <Navigate to="/signin" state={{ from: location.pathname }} />;
   }
 
   return children;

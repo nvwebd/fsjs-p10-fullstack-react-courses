@@ -1,5 +1,5 @@
 import React from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useAuthContext } from '../context/AuthContext';
 
 /**
@@ -12,6 +12,7 @@ const UserSignIn = () => {
    * get the signIn function from the context
    */
   const { signIn } = useAuthContext();
+  const location = useLocation();
   const navigate = useNavigate();
 
   /**
@@ -39,9 +40,13 @@ const UserSignIn = () => {
     await signIn(user);
 
     /**
-     * navigate back to the previous page
+     * if location state includes a from key re-route to previous page else navigate to the root page
      */
-    navigate(-1);
+    if (location.state?.from) {
+      navigate(location.state.from);
+    } else {
+      navigate('/');
+    }
   };
 
   return (
