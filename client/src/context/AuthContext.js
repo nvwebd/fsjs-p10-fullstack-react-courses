@@ -55,7 +55,7 @@ const AuthProvider = (props) => {
     if (authenticatedUserInSessionStorage) {
       setAuthenticatedUser(authenticatedUserInSessionStorage);
     } else {
-      apiClient('users', {
+      return apiClient('users', {
         user: user,
       })
         .then(async (userResponse) => {
